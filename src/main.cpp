@@ -21,9 +21,9 @@ int main()
   const auto build_number = 1;
   std::cout << "Gravity Particles v" << build_number << std::endl;
 
-  auto s = scene(1000);
+  auto s = scene(2000);
 
-  const int frames = 200;
+  const int frames = 500;
   ProgressBar pb(frames);
   pb.print(std::cout);
 
