@@ -1,11 +1,16 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <chrono>
 #include "math/vec3d.h"
 #include "gfx/canvas.h"
 #include "scene.h"
 #include "particle.h"
 #include "utils/progress_bar.h"
+
+using std::cout;
+using std::endl;
+namespace chrono = std::chrono;
 
 std::string get_filename(int frame_number) {
   std::ostringstream filenameStream;
@@ -19,21 +24,31 @@ std::string get_filename(int frame_number) {
 int main()
 {
   const auto build_number = 1;
-  std::cout << "Gravity Particles v" << build_number << std::endl;
+  cout << "Gravity Particles v" << build_number << endl;
 
+  auto start_time = chrono::steady_clock::now();
+
+  cout << "> Generating random scene...";
   auto s = scene(2000);
+  cout << " DONE" << endl;
 
-  const int frames = 500;
+  const int frames = 100;
+  cout << "> Generating " << frames << " frames of simulation..." << endl;
   ProgressBar pb(frames);
-  pb.print(std::cout);
+  pb.print(cout);
 
   for (int i = 1; i <= frames; i++) {
     std::ofstream file(get_filename(i));
     s.draw(640, 480).print_ppm(file);
     s.advance(1);
     pb.update(i);
-    pb.print(std::cout);
+    pb.print(cout);
   }
+  cout << endl << "\tDONE" << endl;
+
+  auto end_time = chrono::steady_clock::now();
+  auto elapsed = chrono::duration_cast<chrono::seconds>(end_time-start_time);
+  cout << "Took " << elapsed.count() << "s" << endl;
 
   return 0;
 }
