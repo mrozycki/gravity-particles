@@ -1,8 +1,5 @@
-#ifndef __COLOR_H__
-#define __COLOR_H__
+#pragma once
 
 enum class color {
   WHITE, BLACK
 };
-
-#endif

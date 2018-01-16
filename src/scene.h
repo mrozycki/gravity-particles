@@ -1,5 +1,4 @@
-#ifndef __SCENE_H__
-#define __SCENE_H__
+#pragma once
 
 #include <ostream>
 #include <vector>
@@ -7,7 +6,7 @@
 #include "gfx/color.h"
 
 class scene {
-  std::vector<Particle> particles;
+  std::vector<Particle> m_particles;
 
 public:
   scene();
@@ -15,10 +14,8 @@ public:
   virtual ~scene() {};
 
   void advance(double time_delta);
-  std::vector<Particle> get_particles() const { return particles; }
+  std::vector<Particle> particles() const { return m_particles; }
   vec3d<double> gravity_on(Particle particle);
 
   canvas draw(int width, int height) const;
 };
-
-#endif

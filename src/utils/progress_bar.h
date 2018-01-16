@@ -1,5 +1,4 @@
-#ifndef __PROGRESS_BAR_H__
-#define __PROGRESS_BAR_H__
+#pragma once
 
 #include <iostream>
 
@@ -17,23 +16,6 @@ public:
   ProgressBar(int max) : m_max(max), m_current(0), m_dirty(true) {}
   virtual ~ProgressBar() = default;
 
-  void update(int new_current) {
-    m_dirty = (ratio(new_current) != ratio(m_current));
-    m_current = new_current;
-  }
-
-  void print(std::ostream& out) {
-    if (!m_dirty) return;
-    m_dirty = false;
-
-    int crosses = ratio()*width/100;
-    int dots = width-crosses;
-
-    out << "\r[";
-    for (int i = 0; i < crosses; i++) out << "#";
-    for (int i = 0; i < dots; i++) out << ".";
-    out << "] " << ratio() << "\%" << std::flush;
-  }
+  void update(int new_current);
+  void print(std::ostream& out);
 };
-
-#endif
