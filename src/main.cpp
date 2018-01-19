@@ -29,20 +29,21 @@ int main()
   auto start_time = chrono::steady_clock::now();
 
   cout << "> Generating random scene...";
-  auto s = scene(2000);
+  auto s = scene(30000);
   cout << " DONE" << endl;
 
-  const int frames = 100;
+  const int frames = 500;
   cout << "> Generating " << frames << " frames of simulation..." << endl;
   ProgressBar pb(frames);
   pb.print(cout);
 
   for (int i = 1; i <= frames; i++) {
-    std::ofstream file(get_filename(i));
-    s.draw(640, 480).print_ppm(file);
     s.advance(1);
     pb.update(i);
     pb.print(cout);
+
+    std::ofstream file(get_filename(i));
+    s.draw(1920, 1080).print_ppm(file);
   }
   cout << endl << "\tDONE" << endl;
 

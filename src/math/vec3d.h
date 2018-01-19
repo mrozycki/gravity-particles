@@ -24,13 +24,23 @@ public:
 
   bool operator==(const vec3d<T>& other) const;
 
-  vec3d<T> unit();
-  T length();
+  vec3d<T> cross(const vec3d<T>& other) const;
+  T dot(const vec3d<T>& other) const;
+
+  vec3d<T> unit() const;
+  T length() const;
+
+  vec3d<T> rebase(vec3d<T> new_x, vec3d<T> new_y, vec3d<T> new_z) const;
 };
 
 template <typename T>
 std::ostream& operator<<(std::ostream& out, const vec3d<T>& v) {
   return out << "[" << v.x() << "," << v.y() << "," << v.z() << "]";
+}
+
+template <typename T>
+vec3d<T> operator*(const T& k, const vec3d<T>& v) {
+  return v*k;
 }
 
 template class vec3d<double>;

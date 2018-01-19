@@ -1,2 +1,4 @@
 output/
+*.pbm
+*.mp4
 a.out

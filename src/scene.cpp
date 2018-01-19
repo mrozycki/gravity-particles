@@ -1,3 +1,4 @@
+#include <iostream>
 #include <cmath>
 #include "gfx/canvas.h"
 #include "scene.h"
@@ -8,8 +9,20 @@ scene::scene() : m_particles() {
 }
 
 scene::scene(int number_of_particles) : m_particles() {
-  for (int i = 0; i < number_of_particles; i++) {
-    m_particles.push_back(random_particle());
+  while (m_particles.size() < number_of_particles) {
+    auto particle = random_particle();
+
+    bool collides_with_anything = false;
+    for (const auto& other : m_particles) {
+      if (particle.collides_with(other)) {
+        collides_with_anything = true;
+        break;
+      }
+    }
+
+    if (!collides_with_anything) {
+      m_particles.push_back(particle);
+    }
   }
 }
 
@@ -26,8 +39,14 @@ vec3d<double> scene::gravity_on(Particle target) {
 
 void scene::advance(double time_delta) {
   auto new_particles = std::vector<Particle>();
-  for (auto& particle : m_particles) {
+  for (const auto& particle : m_particles) {
     new_particles.push_back(particle.update(gravity_on(particle), time_delta));
+  }
+
+  for (auto& particle : new_particles) {
+    for (auto& other : new_particles) {
+      particle.collide_with(other, time_delta);
+    }
   }
 
   m_particles = new_particles;
@@ -38,10 +57,7 @@ canvas scene::draw(int width, int height) const {
   result.clear(color::WHITE);
 
   for (const auto& p: m_particles) {
-    if (p.position().x() < -width/2 || p.position().x() >= width/2
-      || p.position().y() < -height/2 || p.position().y() >= height/2) continue;
-
-    result.set_pixel(p.position().x() + width/2, p.position().y() + height/2, color::BLACK);
+    p.draw(result);
   }
 
   return result;
