@@ -9,12 +9,10 @@ void debug(std::string name, T value) {
   std::cout << name << ": " << value << std::endl;
 }
 
-Particle Particle::update(vec3d<double> force, double time_delta) const {
+void Particle::update(vec3d<double> force, double time_delta) {
   auto acceleration = force / mass();
-  auto new_velocity = speed() + acceleration * time_delta;
-  auto new_position = position() + new_velocity * time_delta;
-
-  return Particle(new_position, new_velocity, mass(), radius());
+  m_speed += acceleration * time_delta;
+  m_position += m_speed * time_delta;
 }
 
 bool Particle::operator==(const Particle &other) const {
@@ -60,8 +58,8 @@ void Particle::draw(canvas& c) const {
 }
 
 Particle random_particle() {
-  constexpr int width = 1920;
-  constexpr int height = 1080;
+  constexpr int width = 320;
+  constexpr int height = 200;
   auto position = vec3d<double>(rand()%width, rand()%height, rand()%((width+height)/2));
   auto speed = vec3d<double>(rand()%200-100, rand()%200-100, rand()%200-100).unit();
   return Particle(position, speed, 1, 0.5);

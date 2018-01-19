@@ -21,6 +21,7 @@ public:
   vec3d<T> operator-(const vec3d<T>& other) const;
 
   vec3d<T>& operator+=(const vec3d<T>& other);
+  vec3d<T>& operator-=(const vec3d<T>& other);
 
   bool operator==(const vec3d<T>& other) const;
 

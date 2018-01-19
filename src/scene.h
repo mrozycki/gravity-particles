@@ -15,7 +15,7 @@ public:
 
   void advance(double time_delta);
   std::vector<Particle> particles() const { return m_particles; }
-  vec3d<double> gravity_on(Particle particle);
+  std::vector<std::pair<Particle*, vec3d<double>>> calculate_gravity();
 
   canvas draw(int width, int height) const;
 };

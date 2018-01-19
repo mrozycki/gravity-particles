@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <cmath>
 #include "gfx/canvas.h"
 #include "scene.h"
@@ -26,30 +27,37 @@ scene::scene(int number_of_particles) : m_particles() {
   }
 }
 
-vec3d<double> scene::gravity_on(Particle target) {
-  auto total_gravity = vec3d<double>(0, 0, 0);
-  for (const auto& particle : m_particles) {
-    if (particle == target) continue;
-    auto distance = (particle.position() - target.position()).length();
-    auto direction = (particle.position() - target.position()).unit();
-    total_gravity += direction * (target.mass() + particle.mass()) / powl(distance, 2);
+std::vector<std::pair<Particle*, vec3d<double>>> scene::calculate_gravity() {
+  std::vector<std::pair<Particle*, vec3d<double>>> result;
+
+  for (auto& particle : m_particles) {
+    vec3d<double> total_gravity = vec3d<double>(0, 0, 0);
+    for (auto& other : result) {
+      auto direction = particle.direction_to(*other.first);
+      auto mass_sum = particle.mass() + other.first->mass();
+      auto distance = particle.distance_from(*other.first);
+      auto partial_gravity = direction * mass_sum / powl(distance, 2);
+
+      total_gravity += partial_gravity;
+      other.second -= partial_gravity;
+    }
+    result.push_back(std::make_pair(&particle, total_gravity));
   }
-  return total_gravity;
+
+  return result;
 }
 
 void scene::advance(double time_delta) {
-  auto new_particles = std::vector<Particle>();
-  for (const auto& particle : m_particles) {
-    new_particles.push_back(particle.update(gravity_on(particle), time_delta));
+  auto gravities = calculate_gravity();
+  for (auto& particle : gravities) {
+    particle.first->update(particle.second, time_delta);
   }
 
-  for (auto& particle : new_particles) {
-    for (auto& other : new_particles) {
+  for (auto& particle : m_particles) {
+    for (auto& other : m_particles) {
       particle.collide_with(other, time_delta);
     }
   }
-
-  m_particles = new_particles;
 }
 
 canvas scene::draw(int width, int height) const {

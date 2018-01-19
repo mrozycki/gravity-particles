@@ -18,7 +18,7 @@ public:
   double mass() const { return m_mass; };
   double radius() const { return m_radius; };
 
-  Particle update(vec3d<double> force, double time_delta) const;
+  void update(vec3d<double> force, double time_delta);
 
   double distance_from(const Particle& other) const;
   vec3d<double> direction_to(const Particle& other) const;

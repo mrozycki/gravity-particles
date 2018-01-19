@@ -29,6 +29,14 @@ vec3d<T>& vec3d<T>::operator+=(const vec3d<T>& other) {
 }
 
 template<typename T>
+vec3d<T>& vec3d<T>::operator-=(const vec3d<T>& other) {
+  m_x -= other.m_x;
+  m_y -= other.m_y;
+  m_z -= other.m_z;
+  return *this;
+}
+
+template<typename T>
 bool vec3d<T>::operator==(const vec3d<T>& other) const {
   return m_x == other.m_x && m_y == other.m_y && m_z == other.m_z;
 }
