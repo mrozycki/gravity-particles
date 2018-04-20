@@ -6,7 +6,7 @@
 #include "particle.h"
 
 scene::scene() : m_particles() {
-  m_particles.push_back(random_particle());
+  m_particles.emplace_back(random_particle());
 }
 
 scene::scene(int number_of_particles) : m_particles() {
@@ -22,7 +22,7 @@ scene::scene(int number_of_particles) : m_particles() {
     }
 
     if (!collides_with_anything) {
-      m_particles.push_back(particle);
+      m_particles.emplace_back(particle);
     }
   }
 }
@@ -41,7 +41,7 @@ std::vector<std::pair<Particle*, vec3d<double>>> scene::calculate_gravity() {
       total_gravity += partial_gravity;
       other.second -= partial_gravity;
     }
-    result.push_back(std::make_pair(&particle, total_gravity));
+    result.emplace_back(&particle, total_gravity);
   }
 
   return result;
